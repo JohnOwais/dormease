@@ -4,9 +4,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class HomeLayout extends StatefulWidget {
-  const HomeLayout({super.key, required this.hostel});
+  const HomeLayout({super.key, required this.data});
 
-  final Map<String, dynamic> hostel;
+  final Map<String, dynamic> data;
 
   @override
   State<HomeLayout> createState() => _HomeLayoutState();
@@ -15,13 +15,15 @@ class HomeLayout extends StatefulWidget {
 class _HomeLayoutState extends State<HomeLayout> {
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      RevenueCard(widget: widget),
-      const SizedBox(height: 8),
-      RentDetails(widget: widget),
-      const SizedBox(height: 8),
-      Stats(widget: widget)
-    ]);
+    return SingleChildScrollView(
+      child: Column(children: [
+        RevenueCard(widget: widget),
+        const SizedBox(height: 8),
+        RentDetails(widget: widget),
+        const SizedBox(height: 8),
+        Stats(widget: widget)
+      ]),
+    );
   }
 }
 
@@ -37,7 +39,7 @@ class RevenueCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
-            color: Colors.cyan,
+            color: Colors.blueGrey,
             border: Border.all(width: 1, color: Colors.white),
             borderRadius: BorderRadius.circular(16)),
         child: Padding(
@@ -62,7 +64,7 @@ class RevenueCard extends StatelessWidget {
                         padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
                         child: Row(
                           children: [
-                            Text(widget.hostel['dateRange']),
+                            Text(widget.data['dateRange']),
                             const SizedBox(width: 8),
                             const Icon(Icons.date_range, size: 20)
                           ],
@@ -70,13 +72,13 @@ class RevenueCard extends StatelessWidget {
                       ))
                 ],
               ),
-              Text("₹ ${widget.hostel['revenue']}",
+              Text("₹ ${widget.data['revenue']}",
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 35,
                       fontWeight: FontWeight.w500)),
               const SizedBox(height: 8),
-              Text("${widget.hostel['percentage']}%",
+              Text("${widget.data['percentage']}%",
                   style: const TextStyle(
                       color: Colors.white70, fontWeight: FontWeight.w500)),
               Text(LocaleKeys.fromLastMonth.tr(),
@@ -99,7 +101,7 @@ class RentDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 245, 255, 250),
+            color: Colors.white,
             border: Border.all(width: 0.5, color: Colors.cyan),
             borderRadius: BorderRadius.circular(16)),
         child: Padding(
@@ -119,20 +121,20 @@ class RentDetails extends StatelessWidget {
                       centerSpaceRadius: 30,
                       sections: [
                         PieChartSectionData(
-                            value: widget.hostel['paidRentPercentage'],
+                            value: widget.data['paidRentPercentage'],
                             color: Colors.cyan,
                             radius: 30,
-                            title: "${widget.hostel['paidRentPercentage']}%",
+                            title: "${widget.data['paidRentPercentage']}%",
                             titleStyle: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500)),
                         PieChartSectionData(
-                            value: 100.0 - widget.hostel['paidRentPercentage'],
+                            value: 100.0 - widget.data['paidRentPercentage'],
                             color: Colors.grey[300],
                             radius: 30,
                             title:
-                                "${100.0 - widget.hostel['paidRentPercentage']}%",
+                                "${100.0 - widget.data['paidRentPercentage']}%",
                             titleStyle: const TextStyle(
                                 color: Colors.cyan,
                                 fontSize: 10,
@@ -225,7 +227,7 @@ class Stats extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 245, 250, 255),
+            color: Colors.white,
             border: Border.all(width: 0.5, color: Colors.cyan),
             borderRadius: BorderRadius.circular(16)),
         child: Padding(
@@ -253,7 +255,7 @@ class Stats extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(widget.hostel['vacantBeds'].toString(),
+                            Text(widget.data['vacantBeds'].toString(),
                                 style: const TextStyle(
                                     color: Colors.green,
                                     fontSize: 25,
@@ -261,7 +263,7 @@ class Stats extends StatelessWidget {
                             const Text(" / ",
                                 style: TextStyle(
                                     fontSize: 25, fontWeight: FontWeight.bold)),
-                            Text(widget.hostel['totalBeds'].toString(),
+                            Text(widget.data['totalBeds'].toString(),
                                 style: const TextStyle(
                                     fontSize: 25, fontWeight: FontWeight.bold)),
                           ],
@@ -293,7 +295,7 @@ class Stats extends StatelessWidget {
                                         color: Colors.cyan,
                                         fontSize: 13,
                                         fontWeight: FontWeight.w500)),
-                                Text(widget.hostel['totalTenant'].toString(),
+                                Text(widget.data['totalTenant'].toString(),
                                     style: const TextStyle(
                                         color: Colors.cyan,
                                         fontSize: 25,
@@ -308,7 +310,7 @@ class Stats extends StatelessWidget {
                                         color: Colors.red,
                                         fontSize: 13,
                                         fontWeight: FontWeight.w500)),
-                                Text(widget.hostel['noticePeroid'].toString(),
+                                Text(widget.data['noticePeroid'].toString(),
                                     style: const TextStyle(
                                         color: Colors.red,
                                         fontSize: 25,

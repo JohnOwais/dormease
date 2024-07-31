@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:dormease/providers/user_provider.dart';
 import 'package:dormease/translations/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -10,22 +11,14 @@ import 'layouts/tenants_layout.dart';
 import 'layouts/tickets_layout.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen(
-      {super.key,
-      required this.phone,
-      required this.name,
-      required this.email});
-
-  final String phone;
-  final String name;
-  final String email;
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Map<String, dynamic> hostel;
+  late Map<String, dynamic> data;
   var selectedTab = LocaleKeys.dashboard.tr();
   var isLoading = true;
 
@@ -33,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(const Duration(seconds: 2));
-      hostel = {
+      data = {
         'revenue': 52365,
         'dateRange': '01/08/24 - 31/08/24',
         'percentage': '+ 0.6',
@@ -59,11 +52,22 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             CircleAvatar(
                 backgroundColor: Colors.transparent,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                )),
+                child: ClipOval(
+                    child: context.watch<UserProvider>().userData['logoUrl'] ==
+                            "null"
+                        ? Image.asset('assets/images/logo.png')
+                        : Image.file(File(context
+                            .watch<UserProvider>()
+                            .userData['logoUrl'])))),
             const SizedBox(width: 16),
-            Text(context.watch<UserProvider>().userData['businessName']),
+            Text(
+                context.watch<UserProvider>().userData['businessName'].length <=
+                        20
+                    ? context.watch<UserProvider>().userData['businessName']
+                    : context
+                        .watch<UserProvider>()
+                        .userData['businessName']
+                        .substring(0, 20)),
           ],
         ),
         backgroundColor: Colors.white,
@@ -81,10 +85,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   top: 8,
                   right: 8,
                   bottom: 90,
-                  child:
-                      SingleChildScrollView(child: Builder(builder: (context) {
+                  child: Builder(builder: (context) {
                     if (selectedTab == LocaleKeys.dashboard.tr()) {
-                      return HomeLayout(hostel: hostel);
+                      return HomeLayout(data: data);
                     } else if (selectedTab == LocaleKeys.rooms.tr()) {
                       return const RoomsLayout();
                     } else if (selectedTab == LocaleKeys.tenants.tr()) {
@@ -94,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     } else {
                       return const SizedBox();
                     }
-                  })),
+                  }),
                 ),
           Toolbar(
               selectedTab: selectedTab,

@@ -5,7 +5,7 @@ class UserProvider extends ChangeNotifier {
 
   void updateBusinessDetails(
       {required String phone,
-      required String logo,
+      required String logoUrl,
       required String businessName,
       required String businessEmail,
       required String address,
@@ -13,7 +13,7 @@ class UserProvider extends ChangeNotifier {
       required String state,
       required String country}) {
     userData['phone'] = phone;
-    userData['logo'] = logo;
+    userData['logoUrl'] = logoUrl;
     userData['businessName'] = businessName;
     userData['businessEmail'] = businessEmail;
     userData['address'] = address;

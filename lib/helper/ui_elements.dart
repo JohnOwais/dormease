@@ -1,3 +1,5 @@
+import 'package:dormease/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -119,6 +121,47 @@ class InputText extends StatelessWidget {
                 child: Text(error, style: const TextStyle(color: Colors.red)),
               )
       ],
+    );
+  }
+}
+
+class SearchBox extends StatelessWidget {
+  const SearchBox(
+      {super.key,
+      required this.controller,
+      required this.filterText,
+      required this.updateFilterText});
+
+  final TextEditingController controller;
+  final String filterText;
+  final Function(String) updateFilterText;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(32)),
+      child: TextField(
+        controller: controller,
+        onChanged: (value) {
+          updateFilterText(value);
+        },
+        decoration: InputDecoration(
+            border: InputBorder.none,
+            prefixIcon: const Icon(Icons.search),
+            suffixIcon: filterText.isNotEmpty
+                ? GestureDetector(
+                    onTap: () {
+                      controller.text = "";
+                      updateFilterText("");
+                      FocusScope.of(context).unfocus();
+                    },
+                    child: const Icon(Icons.close))
+                : null,
+            hintText: LocaleKeys.search.tr(),
+            hintStyle: const TextStyle(fontWeight: FontWeight.normal)),
+        textAlignVertical: TextAlignVertical.center,
+      ),
     );
   }
 }

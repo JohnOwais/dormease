@@ -26,6 +26,7 @@ abstract class  LocaleKeys {
   static const validCityName = 'validCityName';
   static const stateUT = 'stateUT';
   static const country = 'country';
+  static const continuee = 'continuee';
   static const submit = 'submit';
   static const dashboard = 'dashboard';
   static const rooms = 'rooms';
@@ -49,5 +50,18 @@ abstract class  LocaleKeys {
   static const logoutSuccess = 'logoutSuccess';
   static const yes = 'yes';
   static const no = 'no';
+  static const search = 'search';
+  static const addRoom = 'addRoom';
+  static const available = 'available';
+  static const full = 'full';
+  static const beds = 'beds';
+  static const underNotice = 'underNotice';
+  static const rentDue = 'rentDue';
+  static const activeTickets = 'activeTickets';
+  static const roomNo = 'roomNo';
+  static const joined = 'joined';
+  static const active = 'active';
+  static const closed = 'closed';
+  static const issue = 'issue';
 
 }

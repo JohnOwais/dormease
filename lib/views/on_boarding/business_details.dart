@@ -1,13 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
 import 'package:dormease/helper/functions.dart';
 import 'package:dormease/helper/ui_elements.dart';
-import 'package:dormease/providers/user_provider.dart';
 import 'package:dormease/translations/locale_keys.g.dart';
-import 'package:dormease/views/home/home_screen.dart';
+import 'package:dormease/views/on_boarding/detailed_information.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
 class BusinessDetails extends StatefulWidget {
   const BusinessDetails({super.key, required this.phone});
@@ -31,7 +32,45 @@ class _BusinessDetailsState extends State<BusinessDetails> {
   var cityValid = true;
   var stateValid = true;
   var countryValid = true;
-  var isLoading = false;
+  late File imageFile;
+  var imagePath = "null";
+
+  void getImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      final croppedImage = await cropImageFile(pickedFile);
+      setState(() {
+        imageFile = File(croppedImage.path);
+        imagePath = croppedImage.path;
+      });
+    }
+  }
+
+  Future<CroppedFile> cropImageFile(XFile image) async {
+    CroppedFile? croppedFile = await ImageCropper().cropImage(
+      sourcePath: image.path,
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Image Cropper',
+          toolbarColor: Colors.black,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.square,
+          lockAspectRatio: true,
+          aspectRatioPresets: [
+            CropAspectRatioPreset.square,
+          ],
+        ),
+        IOSUiSettings(
+          title: 'Image Cropper',
+          aspectRatioPresets: [
+            CropAspectRatioPreset.square,
+          ],
+        ),
+      ],
+    );
+    return croppedFile!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +98,19 @@ class _BusinessDetailsState extends State<BusinessDetails> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                GestureDetector(
+                  onTap: () {
+                    getImage();
+                  },
+                  child: CircleAvatar(
+                      radius: 50,
+                      backgroundColor: Colors.transparent,
+                      child: ClipOval(
+                          child: imagePath == "null"
+                              ? Image.asset('assets/images/business_logo.png')
+                              : Image.file(imageFile))),
+                ),
+                const SizedBox(height: 16),
                 InputText(
                     controller: nameController,
                     keyboard: TextInputType.text,
@@ -157,7 +209,7 @@ class _BusinessDetailsState extends State<BusinessDetails> {
           right: 16,
           bottom: 16,
           child: ExpandedButton(
-              label: LocaleKeys.submit.tr(),
+              label: LocaleKeys.continuee.tr(),
               onPressed: () async {
                 final businessName = nameController.text.trim();
                 final businessEmail = emailController.text.trim();
@@ -190,33 +242,21 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                     countryValid = false;
                   });
                 } else {
-                  setState(() {
-                    isLoading = true;
-                  });
-                  await Future.delayed(const Duration(seconds: 2));
-                  context.read<UserProvider>().updateBusinessDetails(
-                      phone: widget.phone,
-                      logo: "null",
-                      businessName: businessName,
-                      businessEmail: businessEmail,
-                      address: address,
-                      city: city,
-                      state: state,
-                      country: country);
-                  setState(() {
-                    isLoading = false;
-                  });
-                  Navigator.pushAndRemoveUntil(
+                  Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => HomeScreen(
+                          builder: (context) => DetailedInformation(
                               phone: widget.phone,
-                              name: businessName,
-                              email: businessEmail)),
-                      (route) => false);
+                              imagePath: imagePath,
+                              businessName: businessName,
+                              businessEmail: businessEmail,
+                              address: address,
+                              city: city,
+                              state: state,
+                              country: country)));
                 }
               },
-              isLoading: isLoading),
+              isLoading: false),
         )
       ]),
     );

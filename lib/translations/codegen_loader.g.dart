@@ -40,6 +40,7 @@ class CodegenLoader extends AssetLoader{
   "validCityName": "Please enter valid city name",
   "stateUT": "State / UT",
   "country": "Country",
+  "continuee": "Continue",
   "submit": "Submit",
   "dashboard": "Dashboard",
   "rooms": "Rooms",
@@ -62,7 +63,20 @@ class CodegenLoader extends AssetLoader{
   "sureToLogout": "Sure to logout?",
   "logoutSuccess": "Successfully Logged Out",
   "yes": "Yes",
-  "no": "No"
+  "no": "No",
+  "search": "Search",
+  "addRoom": "Add Room",
+  "available": "Available",
+  "full": "Full",
+  "beds": "Beds:",
+  "underNotice": "Under Notice:",
+  "rentDue": "Rent Due:",
+  "activeTickets": "Active Tickets:",
+  "roomNo": "Room No:",
+  "joined": "Joined:",
+  "active": "Active",
+  "closed": "Closed",
+  "issue": "Issue: "
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en": en};
 }
